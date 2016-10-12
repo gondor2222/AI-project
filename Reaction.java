@@ -3,6 +3,7 @@ import java.util.*;
 public class Reaction {
 
 	public String name;
+	public boolean viable;
 	public ArrayList<Compound> madeFrom;
 	public ArrayList<Compound> madeTo;
 	int price;
@@ -12,12 +13,22 @@ public class Reaction {
 		this.price = price;
 		madeFrom = new ArrayList<Compound>();
 		madeTo = new ArrayList<Compound>();
+		viable = false;
 	}
 	
 	public Reaction(int price, ArrayList<Compound> in, ArrayList<Compound> out) {
 		this.price = price;
 		madeFrom = in;
 		madeTo = out;
+		viable = false;
+	}
+	
+	public boolean isViable() {
+		return viable;
+	}
+	
+	public void set_viable(boolean b) {
+		viable = b;
 	}
 
 	public String toString() {
@@ -31,4 +42,25 @@ public class Reaction {
 		}
 		return ret;
 	}
+	public boolean isMakeable()
+	{
+		/*int a = madeFrom.size();
+		int b = compounds.size();
+		for(int i = 0; i < a; i++)
+		{
+			for(int j = 0; j < b; j++)
+			{
+				if(madeFrom.get(i).name == compounds.get(j).name)
+				{
+					break;
+				}
+				if(j == b-1)
+				{
+					return false;
+				}
+			}
+		}*/
+		return true;
+	}
+
 }
