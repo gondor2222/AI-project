@@ -2,14 +2,14 @@ import java.util.*;
 
 public class Compound
 {
-	private int name;
+	public String name;
 	private boolean substrate;
 	private boolean makeable;
 	private int price;
 	public ArrayList<Reaction> madeFrom;
 	public ArrayList<Reaction> madeTo;
 
-	public Compound(int name)
+	public Compound(String name)
 	{
 		this.name = name;
 		substrate = false;
@@ -17,6 +17,17 @@ public class Compound
 		price = -1;
 		madeFrom = new ArrayList<Reaction>();
 		madeTo = new ArrayList<Reaction>();
+	}
+	
+	public Compound(String name, int price)
+	{
+		this.name = name;
+		substrate = false;
+		makeable = false;
+		this.price = price;
+		madeFrom = new ArrayList<Reaction>();
+		madeTo = new ArrayList<Reaction>();
+		substrate = true;
 	}
 
 	public void set_substrate(boolean b)
@@ -47,5 +58,17 @@ public class Compound
 	public int getPrice()
 	{
 		return price;
+	}
+	
+	public String toString() {
+		String ret = "Compound " + name + " made from...used in\n";
+		for (Reaction r : madeFrom) {
+			ret += r.name + " ";
+		}
+		ret += "...";
+		for (Reaction r : madeTo) {
+			ret += r.name + " ";
+		}
+		return ret;
 	}
 }

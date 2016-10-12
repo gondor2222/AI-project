@@ -2,50 +2,49 @@ import java.util.*;
 
 class Graph
 {
-   private int numCompounds;
-   private int numReactions;
    private static final int maxProducts = 2;
-   private ArrayList<TreeSet<Integer>> compounds;
-   private ArrayList<TreeSet<Integer>> reactions;
+   private ArrayList<Compound> compounds;
+   private ArrayList<Reaction> reactions;
    private Random rand;
 
    public Graph(int numCompounds, int numReactions)
    {
-      this.numCompounds = numCompounds;
-      this.numReactions = numReactions;
       rand = new Random();
-      compounds = new ArrayList<TreeSet<Integer>>();
-      reactions = new ArrayList<TreeSet<Integer>>();
-      for (int i = 0; i < numCompounds;i++) {
-         compounds.add(new TreeSet<Integer>());
+      compounds = new ArrayList<Compound>();
+      reactions = new ArrayList<Reaction>();
+      for (int i = 0; i < numCompounds; i++) {
+         compounds.add(new Compound(i + ""));
       }
-      for (int i = 0; i < numReactions; i++) {
-         reactions.add(new TreeSet<Integer>());
+	  for (int i = 0; i < numReactions; i++) {
+         reactions.add(new Reaction("R" + i, 1));
       }
    }
 
    public void generateScaleFree() {
       int randInt;
-      for (int i = 0; i < numReactions; i++) {
+      for (int i = 0; i < reactions.size(); i++) {
+		 Reaction r = reactions.get(i);
          int numInputs = rand.nextInt(2) + 2;
          boolean usesReagant = (numInputs == 3);
          int numOutputs = rand.nextInt(maxProducts) + 1;
-         int reagant = 0;
+         Compound reagant = new Compound("");
          while (numInputs != 0) {
-            int input = rand.nextInt(numCompounds);
-            if (!compounds.get(input).contains(i)) {
+            Compound input = compounds.get(rand.nextInt(compounds.size()));
+            if (!input.madeTo.contains(r)) {
                reagant = input;
-               compounds.get(input).add(i);
+			   input.madeTo.add(r);
+			   r.madeFrom.add(input);
                numInputs--;
             }
          }
          if (usesReagant) {
-            reactions.get(i).add(reagant);
+            r.madeTo.add(reagant);
          }
          while (numOutputs != 0) {
-            int output = rand.nextInt(numCompounds);
-            if (!compounds.get(output).contains(i)) {
-               reactions.get(i).add(output);
+            Compound output = compounds.get(rand.nextInt(compounds.size()));
+            if (!output.madeTo.contains(r)) {
+               r.madeTo.add(output);
+			   output.madeFrom.add(r);
                numOutputs--;
             }
          }
@@ -53,14 +52,13 @@ class Graph
    }
 
    public String toString() {
-         String ret = "Compounds:\n";
-      for (int i = 0; i < numCompounds;i++) {
-         ret = ret + "compound " + i + " participates in reactions " + compounds.get(i) + "\n";
-      }
-         ret += "Reactions:\n";
-      for (int i =0; i < numReactions;i++) {
-         ret = ret + "reaction " + i + " produces compounds " + reactions.get(i) + "\n";
-      }
+      String ret = compounds.size() + " compounds, " + reactions.size() + " reactions\n";
+	  for (Compound c : compounds) {
+		  ret += c.toString() + "\n";		  
+	  }
+	  for (Reaction r : reactions) {
+		  ret += r.toString() + "\n";
+	  }
       return ret;
    }
 
