@@ -6,11 +6,10 @@ class Plan
 	private ArrayList<Reaction> reactions;
 	private Graph g;
 	
-	public Plan(ArrayList<TreeSet<Integer>> compounds, ArrayList<TreeSet<Integer>> reactions, Graph g)
+	public Plan(ArrayList<Compound> compounds, ArrayList<Compound> reactions)
 	{
-		/*this.compounds = compounds;
+		this.compounds = compounds;
 		this.reactions = reactions;
-		this.g = g;*/
 	}
 
 	public boolean isValid(ArrayList<Compound> targets)
