@@ -34,7 +34,7 @@ class Plan
 			for(int i = 0; i < length; i++)
 			{
 				r = reactions.get(i);
-				if(r.isViable() && r.isMakeable())
+				if(r.isViable() && r.isMakeable(compounds))
 				{
 					r.set_viable(true);
 					for(Compound com : r.madeTo)

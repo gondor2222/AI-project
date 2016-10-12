@@ -42,9 +42,9 @@ public class Reaction {
 		}
 		return ret;
 	}
-	public boolean isMakeable()
+	public boolean isMakeable(ArrayList<Compound> compounds)
 	{
-		/*int a = madeFrom.size();
+		int a = madeFrom.size();
 		int b = compounds.size();
 		for(int i = 0; i < a; i++)
 		{
@@ -59,7 +59,7 @@ public class Reaction {
 					return false;
 				}
 			}
-		}*/
+		}
 		return true;
 	}
 
