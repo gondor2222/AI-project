@@ -2,8 +2,8 @@ import java.util.*;
 
 class Plan
 {
-	private ArrayList<TreeSet<Integer>> compounds;
-	private ArrayList<TreeSet<Integer>> reactions;
+	private ArrayList<Compound> compounds;
+	private ArrayList<Reaction> reactions;
 	private Graph g;
 	
 	public Plan(ArrayList<TreeSet<Integer>> compounds, ArrayList<TreeSet<Integer>> reactions, Graph g)
@@ -13,9 +13,46 @@ class Plan
 		this.g = g;
 	}
 
-	public boolean isValid()
+	public boolean isValid(ArrayList<Compound> targets)
 	{
-		return false;
+		int length = compounds.size();
+		LinkedList<Compound> list = new LinkedList<Compound>();
+		Compound c;
+		Reaction r;
+		ArrayList<Reaction> reactions;
+		for(int i = 0; i < length; i++)
+		{
+			c = compounds.get(i);
+			c.set_makeable(true);
+			list.add(c);
+		}
+		while(list.size() > 0)
+		{
+			c = list.poll();
+			reactions = c.getMadeFrom();
+			length = reactions.size();
+			for(int i = 0; i < length; i++)
+			{
+				r = reactions.get(i);
+				if(r.isViable() && r.isMakeable())
+				{
+					r.set_viable(true);
+					for(Compound com : r.getMadeTo())
+					{
+						com.set_makeable(true);
+						list.add(com);
+					}
+				}
+			}
+		}
+		for(Compound com : targets)
+		{
+			if(!com.isMakeable())
+			{
+				return false;
+			}
+		}
+		return true;
 	}
 	
 }

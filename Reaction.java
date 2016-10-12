@@ -12,5 +12,25 @@ public class Reaction {
 		madeTo = out;
 	}
 
+	public boolean isMakeable(ArrayList<Compound> compounds)
+	{
+		int a = madeFrom.size();
+		int b = compounds.size();
+		for(int i = 0; i < a; i++)
+		{
+			for(int j = 0; j < b; j++)
+			{
+				if(madeFrom.get(i).getName() == compounds.get(j).getName())
+				{
+					break;
+				}
+				if(j == b-1)
+				{
+					return false;
+				}
+			}
+		}
+		return true;
+	}
 
 }
