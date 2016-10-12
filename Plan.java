@@ -15,7 +15,7 @@ class Plan
 
 	public boolean isValid()
 	{
-		
+		return false;
 	}
 	
 }
