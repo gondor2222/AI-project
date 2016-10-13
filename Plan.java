@@ -90,11 +90,13 @@ class Plan
 			return false;
 		}
 		for (Compound c : r.madeFrom) {
+			boolean viable = false;
 			if (visitedC.containsKey(c)) {
-				visitedR.put(r, visitedC.get(c));
-				continue;
+				viable = visitedC.get(c);
 			}
-			boolean viable = checkPlan(c);
+			else {
+				viable = checkPlan(c);
+			}
 			if (!viable) {
 				visitedR.put(r, false);
 				return false;
@@ -102,49 +104,6 @@ class Plan
 		}
 		visitedR.put(r, true);
 		return true;
-	}
-	public boolean generatePlan(Compound c, int depth)
-	{
-		boolean ret = false;
-		if (c.substrate) {
-			c.chosen = true;
-			return true;
-		}
-		if(depth == 0)
-		{
-			return false;
-		}
-		for (Reaction r : c.madeFrom) {
-			boolean makeable = generatePlan(r, depth - 1);
-			if (makeable) {
-				c.makeable = true;
-				c.chosen = true;
-				ret = true;
-			}
-		}
-		return ret;
-	}
-	
-	public boolean generatePlan(Reaction r, int depth)
-	{
-		boolean ret = false;
-		if (r.viable) {
-			r.chosen = true;
-			return true;
-		}
-		if(depth == 0)
-		{
-			return false;
-		}
-		for (Compound c : r.madeFrom) {
-			boolean viable = generatePlan(c, depth - 1);
-			if (viable) {
-				r.viable = true;
-				r.chosen = true;
-				ret = true;
-			}
-		}
-		return ret;
 	}
 
 	private void DFS_Reaction(Reaction r, ArrayList<Compound> compounds, ArrayList<Reaction> reactions, int depth)
@@ -181,7 +140,7 @@ class Plan
 	{
 		if(!compounds.contains(c))
 		{
-			return;
+			return false;
 		}
 		for(Compound com : compounds)
 		{
@@ -189,9 +148,9 @@ class Plan
 			{
 				com.chosen = false;
 				if (!isViable()) {
+					System.out.println("Attempted to remove " + c.name + " but result was unviable");
 					com.chosen = true;
 				}
-				System.out.println("Attempted to remove compound " + c);
 				return !com.chosen;
 			}
 		}
@@ -202,7 +161,7 @@ class Plan
 	{
 		if(!reactions.contains(r))
 		{
-			return;
+			return false;
 		}
 		for(Reaction rea : reactions)
 		{

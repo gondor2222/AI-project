@@ -23,5 +23,6 @@ class Synthesis
 		System.out.println(p.isViable());
 		System.out.println(p.deleteCompound(g.compounds.get(4)));
 		System.out.println(p.deleteCompound(g.compounds.get(2)));
+		System.out.println(p.deleteCompound(g.compounds.get(7)));
 	}
 }
