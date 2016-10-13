@@ -128,6 +128,10 @@ class Plan
 
 	public void deleteCompound(Compound c)
 	{
+		if(!compounds.contains(c))
+		{
+			return;
+		}
 		for(Compound com : compounds)
 		{
 			if(com.name == c.name)
@@ -149,6 +153,10 @@ class Plan
 	
 	public void deleteReaction(Reaction r)
 	{
+		if(!reactions.contains(r))
+		{
+			return;
+		}
 		for(Reaction rea : reactions)
 		{
 			if(rea.name == r.name)
