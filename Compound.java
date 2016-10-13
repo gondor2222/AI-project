@@ -4,6 +4,7 @@ public class Compound
 {
 	public String name;
 	public boolean substrate;
+	public boolean originalSubstrate;
 	public boolean makeable;
 	public boolean chosen;
 	public int price;
@@ -35,7 +36,8 @@ public class Compound
 	}
 	
 	public String toString() {
-		String ret = "Compound " + name + " made from...used in\n";
+		String ret = "Compound " + name + "(" + 
+		(substrate ? "Y" : "N") + ")" + "made from...used in\n";
 		for (Reaction r : madeFrom) {
 			ret += r.name + " ";
 		}

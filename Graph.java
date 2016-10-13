@@ -16,6 +16,7 @@ class Graph
          compounds.add(new Compound(i + ""));
 		 if (rand.nextDouble() < 0.3) {
 			 compounds.get(i).substrate = true;
+			 compounds.get(i).originalSubstrate = true;
 			 compounds.get(i).makeable = true;
 			 compounds.get(i).price = (int)Math.pow(2,rand.nextInt(10));
 		 }

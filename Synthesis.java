@@ -4,26 +4,24 @@ class Synthesis
 {
 	public static void main(String[] args) 
 	{
-		int numCompounds = 10;
-      	int numReactions = 10;
+		int numCompounds = 30;
+      	int numReactions = 90;
       	Graph g = new Graph(1, numCompounds, numReactions);
       	System.out.println(g.toString());
 		ArrayList<Compound> targets = new ArrayList<Compound>();
-		System.out.println("Targets are " + g.compounds.get(4).name +
-			" " + g.compounds.get(8).name);
-		g.compounds.get(9).substrate = true;
-		g.compounds.get(7).substrate = true;
-		for (Compound c : g.compounds) {
-			System.out.println(c + "is " + (c.substrate? "" : "not ") + "a substrate");
-		}
 		targets.add(g.compounds.get(3));
-		Plan p = new Plan(g.compounds, g.reactions, targets);
-		p.generateInitialPlan(2);
+		targets.add(g.compounds.get(6));
+		Plan p = new Plan(1, g.compounds, g.reactions, targets);
+		p.generateInitialPlan(4);
 		System.out.println(p.toString());
-		System.out.println(p.isViable());
-		System.out.println(p.deleteCompound(g.compounds.get(4)));
-		System.out.println(p.deleteCompound(g.compounds.get(2)));
-		System.out.println(p.deleteCompound(g.compounds.get(7)));
-		System.out.println(p.deleteCompound(g.compounds.get(9)));
+		if (!p.isViable()) {
+			System.out.println("Could not locate viable plan from initial graph");
+			return;
+		}
+		while (p.beta() < 1) {
+			p.anneal();
+		}
+		
+		System.out.println(p.toString());
 	}
 }
