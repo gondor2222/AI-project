@@ -89,10 +89,7 @@ class Plan
 				if(!r.visited)
 				{
 					r.visited = true;
-					if(depth == 1)
-					{
-						reactions.add(r);
-					}
+					reactions.add(r);
 					DFS_Reaction(r, compounds, reactions, depth);
 				}
 			}
@@ -106,10 +103,7 @@ class Plan
 			if(!c.visited)
 			{
 				c.visited = true;
-				if(depth == 1)
-				{
-					compounds.add(c);
-				}
+				compounds.add(c);
 				DFS_Compound(c, compounds, reactions, depth-1);
 			}
 		}
@@ -126,10 +120,7 @@ class Plan
 			if(!r.visited)
 			{
 				r.visited = true;
-				if(depth == 1)
-				{
-					reactions.add(r);
-				}
+				reactions.add(r);
 				DFS_Reaction(r, compounds, reactions, depth-1);
 			}
 		}
@@ -149,6 +140,10 @@ class Plan
 		for(Reaction r : c.madeTo)
 		{
 			r.viable = false;
+		}
+		for(Reaction r : c.madeFrom)
+		{
+			deleteReaction(r);
 		}
 	}
 	
