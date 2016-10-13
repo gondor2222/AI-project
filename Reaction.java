@@ -7,6 +7,7 @@ public class Reaction {
 	public ArrayList<Compound> madeFrom;
 	public ArrayList<Compound> madeTo;
 	int price;
+	public boolean visited = false;
 	
 	public Reaction(String name, int price) {
 		this.name = name;
@@ -21,14 +22,6 @@ public class Reaction {
 		madeFrom = in;
 		madeTo = out;
 		viable = false;
-	}
-	
-	public boolean isViable() {
-		return viable;
-	}
-	
-	public void set_viable(boolean b) {
-		viable = b;
 	}
 
 	public String toString() {

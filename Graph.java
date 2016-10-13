@@ -3,8 +3,8 @@ import java.util.*;
 class Graph
 {
    private static final int maxProducts = 2;
-   private ArrayList<Compound> compounds;
-   private ArrayList<Reaction> reactions;
+   public ArrayList<Compound> compounds;
+   public ArrayList<Reaction> reactions;
    private Random rand;
 
    public Graph(int numCompounds, int numReactions)
@@ -60,15 +60,6 @@ class Graph
 		  ret += r.toString() + "\n";
 	  }
       return ret;
-   }
-
-   public static void main(String[] args)
-   {
-      int numCompounds = 10;
-      int numReactions = 20;
-      Graph g = new Graph(numCompounds, numReactions);
-      g.generateScaleFree();
-      System.out.println(g.toString());
    }
 }
 
