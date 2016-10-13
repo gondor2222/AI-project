@@ -18,6 +18,7 @@ class Graph
 	  for (int i = 0; i < numReactions; i++) {
          reactions.add(new Reaction("R" + i, 1));
       }
+      
    }
 
    public void generateScaleFree() {
@@ -64,8 +65,8 @@ class Graph
 
    public static void main(String[] args)
    {
-      int numCompounds = 10;
-      int numReactions = 20;
+      int numCompounds = 1000;
+      int numReactions = 2500;
       Graph g = new Graph(numCompounds, numReactions);
       g.generateScaleFree();
       System.out.println(g.toString());
