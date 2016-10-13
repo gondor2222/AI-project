@@ -13,10 +13,10 @@ class Graph
       compounds = new ArrayList<Compound>();
       reactions = new ArrayList<Reaction>();
       for (int i = 0; i < numCompounds; i++) {
-         compounds.add(new Compound(i + ""));
+         compounds.add(new Compound(i + "", (int)Math.pow(2,rand.nextInt(10))));
       }
 	  for (int i = 0; i < numReactions; i++) {
-         reactions.add(new Reaction("R" + i, 1));
+         reactions.add(new Reaction("R" + i, 10));
       }
       generateScaleFree();
    }
