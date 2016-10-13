@@ -17,6 +17,46 @@ class Plan
 		visitedR = new HashMap<Reaction, Boolean>();
 	}
 
+	public int numSubstrates() {
+		int ret = 0;
+		for (Compound c : compounds) {
+			if (c.substrate) {
+				ret++;
+			}
+		}
+		return ret;
+	}
+	
+	public int numChosenSubstrates() {
+		int ret = 0;
+		for (Compound c : compounds) {
+			if (c.substrate && c.chosen) {
+				ret++;
+			}
+		}
+		return ret;
+	}
+	
+	public int numChosenR() {
+		int ret = 0;
+		for (Reaction r : reactions) {
+			if (r.chosen) {
+				ret++;
+			}
+		}
+		return ret;
+	}
+	
+	public int numPossibleR() {
+		int ret = 0;
+		for (Reaction r : reactions) {
+			if (!r.chosen && checkPlan(r)) {
+				ret++;
+			}
+		}
+		return ret;
+	}
+	
 	public void setTarget(ArrayList<Compound> targets) {
 		this.targets = targets;
 	}
@@ -68,27 +108,34 @@ class Plan
 			visitedC.put(c, false);
 			return false;
 		}
+		visitedC.put(c, false);
 		for (Reaction r : c.madeFrom) {
+			boolean makeable = false;
 			if (visitedR.containsKey(r)) {
-				visitedC.put(c, visitedR.get(r));
-				continue;
+				makeable |= visitedR.get(r);
 			}
-			boolean makeable = checkPlan(r);
+			else {
+				makeable = checkPlan(r);
+			}
 			if (makeable) {
 				visitedC.put(c, true);
+				c.makeable = true;
 				return true;
 			}
 		}
 		visitedC.put(c, false);
+		c.makeable = false;
 		return false;
 	}
 	
 	public boolean checkPlan(Reaction r) {
+		System.out.println("Checking reaction" + r.name);
 		if(!r.chosen)
 		{
 			visitedR.put(r, false);
 			return false;
 		}
+		visitedR.put(r, false);
 		for (Compound c : r.madeFrom) {
 			boolean viable = false;
 			if (visitedC.containsKey(c)) {
@@ -99,10 +146,12 @@ class Plan
 			}
 			if (!viable) {
 				visitedR.put(r, false);
+				r.viable = false;
 				return false;
 			}
 		}
 		visitedR.put(r, true);
+		r.viable = true;
 		return true;
 	}
 
@@ -144,14 +193,14 @@ class Plan
 		}
 		for(Compound com : compounds)
 		{
-			if(com.name.equals(c.name) && c.chosen)
+			if(com.name.equals(c.name) && c.substrate)
 			{
-				com.chosen = false;
+				com.substrate = false;
 				if (!isViable()) {
 					System.out.println("Attempted to remove " + c.name + " but result was unviable");
-					com.chosen = true;
+					com.substrate = true;
 				}
-				return !com.chosen;
+				return !com.substrate;
 			}
 		}
 		return false;
@@ -167,11 +216,11 @@ class Plan
 		{
 			if(rea.name.equals(r.name) && r.viable)
 			{
-				rea.viable = false;
+				rea.chosen = false;
 				if (!isViable()) {
-					rea.viable = true;
+					rea.chosen = true;
 				}
-				return !rea.viable;
+				return !rea.chosen;
 			}
 		}
 		return false;
