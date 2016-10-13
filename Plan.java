@@ -179,6 +179,10 @@ class Plan
 
 	public boolean deleteCompound(Compound c)
 	{
+		if(!compounds.contains(c))
+		{
+			return;
+		}
 		for(Compound com : compounds)
 		{
 			if(com.name.equals(c.name) && c.chosen)
@@ -196,6 +200,10 @@ class Plan
 	
 	public boolean deleteReaction(Reaction r)
 	{
+		if(!reactions.contains(r))
+		{
+			return;
+		}
 		for(Reaction rea : reactions)
 		{
 			if(rea.name.equals(r.name) && r.viable)
