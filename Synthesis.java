@@ -6,7 +6,7 @@ class Synthesis
 	{
 		int numCompounds = 10;
       		int numReactions = 20;
-      		Graph g = new Graph(numCompounds, numReactions);
+      		Graph g = new Graph(1, numCompounds, numReactions);
       		//System.out.println(g.toString());
 		Plan p = new Plan();
 		ArrayList<Compound> targets = new ArrayList<Compound>();

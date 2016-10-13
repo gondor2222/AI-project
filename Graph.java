@@ -7,9 +7,9 @@ class Graph
    public ArrayList<Reaction> reactions;
    private Random rand;
 
-   public Graph(int numCompounds, int numReactions)
+   public Graph(int seed, int numCompounds, int numReactions)
    {
-      rand = new Random();
+      rand = new Random(seed);
       compounds = new ArrayList<Compound>();
       reactions = new ArrayList<Reaction>();
       for (int i = 0; i < numCompounds; i++) {
