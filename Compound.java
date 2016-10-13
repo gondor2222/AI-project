@@ -5,6 +5,7 @@ public class Compound
 	public String name;
 	public boolean substrate;
 	public boolean makeable;
+	public boolean chosen;
 	public int price;
 	public ArrayList<Reaction> madeFrom;
 	public ArrayList<Reaction> madeTo;
@@ -13,9 +14,10 @@ public class Compound
 	public Compound(String name)
 	{
 		this.name = name;
+		this.chosen = false;
 		substrate = false;
 		makeable = false;
-		price = -1;
+		price = Integer.MAX_VALUE;
 		madeFrom = new ArrayList<Reaction>();
 		madeTo = new ArrayList<Reaction>();
 	}
@@ -25,6 +27,7 @@ public class Compound
 		this.name = name;
 		substrate = false;
 		makeable = false;
+		chosen = false;
 		this.price = price;
 		madeFrom = new ArrayList<Reaction>();
 		madeTo = new ArrayList<Reaction>();

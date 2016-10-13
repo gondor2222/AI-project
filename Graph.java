@@ -16,6 +16,7 @@ class Graph
          compounds.add(new Compound(i + ""));
 		 if (rand.nextDouble() < 0.3) {
 			 compounds.get(i).substrate = true;
+			 compounds.get(i).makeable = true;
 			 compounds.get(i).price = (int)Math.pow(2,rand.nextInt(10));
 		 }
       }
@@ -47,9 +48,9 @@ class Graph
          }
          while (numOutputs != 0) {
             Compound output = compounds.get(rand.nextInt(compounds.size()));
-            if (!output.madeTo.contains(r)) {
+            if (!output.madeTo.contains(r) && !r.madeTo.contains(output)) {
                r.madeTo.add(output);
-			   output.madeFrom.add(r);
+	       output.madeFrom.add(r);
                numOutputs--;
             }
          }

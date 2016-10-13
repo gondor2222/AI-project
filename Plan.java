@@ -5,95 +5,146 @@ class Plan
 	private ArrayList<Compound> compounds;
 	private ArrayList<Reaction> reactions;
 	public ArrayList<Compound> targets;
+	public HashMap<Compound, Boolean> visitedC;
+	public HashMap<Reaction, Boolean> visitedR;
 	
 	public Plan(ArrayList<Compound> compounds, ArrayList<Reaction> reactions, ArrayList<Compound> targets)
 	{
 		this.compounds = compounds;
 		this.reactions = reactions;
 		this.targets = targets;
+		visitedC = new HashMap<Compound, Boolean>();
+		visitedR = new HashMap<Reaction, Boolean>();
 	}
 
-	public Plan(){}
+	public void setTarget(ArrayList<Compound> targets) {
+		this.targets = targets;
+	}
 
-	public boolean isValid()
+	public boolean isViable()
 	{
-		for(Compound c : compounds)
+		visitedC = new HashMap<Compound, Boolean>();
+		visitedR = new HashMap<Reaction, Boolean>();
+		boolean ret = true;
+		for(Compound c : targets)
 		{
-			c.makeable = false;
+			ret &= checkPlan(c);
 		}
-		for(Reaction r : reactions)
-		{
-			r.viable = false;
+		return ret;
+	}
+
+	public void generateInitialPlan(int depth) {
+		for (Compound c : targets) {
+			generateChosen(c, depth + 1);
 		}
-		int length = compounds.size();
-		LinkedList<Compound> list = new LinkedList<Compound>();
-		Compound c;
-		Reaction r;
-		ArrayList<Reaction> reactions;
-		for(int i = 0; i < length; i++)
-		{
-			c = compounds.get(i);
-			c.makeable = true;
-			list.add(c);
+	}
+	
+	
+	
+	public void generateChosen(Compound c, int depth) {
+		c.chosen = true;
+		for (Reaction r : c.madeFrom) {
+			generateChosen(r, depth-1);
 		}
-		while(list.size() > 0)
+	}
+	
+	public void generateChosen(Reaction r, int depth) {
+		if (depth == 0) {
+			return;
+		}
+		r.chosen = true;
+		for (Compound c : r.madeFrom) {
+			generateChosen(c, depth);
+		}
+	}
+	
+	public boolean checkPlan(Compound c) {
+		if (c.substrate && c.chosen) {
+			visitedC.put(c, true);
+			return true;
+		}
+		if(!c.chosen)
 		{
-			c = list.poll();
-			reactions = c.madeFrom;
-			length = reactions.size();
-			for(int i = 0; i < length; i++)
-			{
-				r = reactions.get(i);
-				if(!r.viable && r.isMakeable(compounds))
-				{
-					r.viable = true;
-					for(Compound com : r.madeTo)
-					{
-						if(!com.makeable)
-						{
-							com.makeable = true;
-							list.add(com);
-						}
-					}
-				}
+			visitedC.put(c, false);
+			return false;
+		}
+		for (Reaction r : c.madeFrom) {
+			if (visitedR.containsKey(r)) {
+				visitedC.put(c, visitedR.get(r));
+				continue;
+			}
+			boolean makeable = checkPlan(r);
+			if (makeable) {
+				visitedC.put(c, true);
+				return true;
 			}
 		}
-		for(Compound com : targets)
+		visitedC.put(c, false);
+		return false;
+	}
+	
+	public boolean checkPlan(Reaction r) {
+		if(!r.chosen)
 		{
-			if(!com.makeable)
-			{
+			visitedR.put(r, false);
+			return false;
+		}
+		for (Compound c : r.madeFrom) {
+			if (visitedC.containsKey(c)) {
+				visitedR.put(r, visitedC.get(c));
+				continue;
+			}
+			boolean viable = checkPlan(c);
+			if (!viable) {
+				visitedR.put(r, false);
 				return false;
 			}
 		}
+		visitedR.put(r, true);
 		return true;
 	}
-
-	public void generateInitialPlan(ArrayList<Compound> targets, int depth)
+	public boolean generatePlan(Compound c, int depth)
 	{
-		this.targets = targets;
+		boolean ret = false;
+		if (c.substrate) {
+			c.chosen = true;
+			return true;
+		}
 		if(depth == 0)
 		{
-			return;
+			return false;
 		}
-		for(Compound c : targets)
-		{
-			c.makeable = true;
-		}
-		compounds = new ArrayList<Compound>();
-		reactions = new ArrayList<Reaction>();
-		for(Compound c : targets)
-		{
-			c.visited = true;
-			for(Reaction r : c.madeFrom)
-			{
-				if(!r.visited)
-				{
-					r.visited = true;
-					reactions.add(r);
-					DFS_Reaction(r, compounds, reactions, depth);
-				}
+		for (Reaction r : c.madeFrom) {
+			boolean makeable = generatePlan(r, depth - 1);
+			if (makeable) {
+				c.makeable = true;
+				c.chosen = true;
+				ret = true;
 			}
 		}
+		return ret;
+	}
+	
+	public boolean generatePlan(Reaction r, int depth)
+	{
+		boolean ret = false;
+		if (r.viable) {
+			r.chosen = true;
+			return true;
+		}
+		if(depth == 0)
+		{
+			return false;
+		}
+		for (Compound c : r.madeFrom) {
+			boolean viable = generatePlan(c, depth - 1);
+			if (viable) {
+				r.viable = true;
+				r.chosen = true;
+				ret = true;
+			}
+		}
+		return ret;
 	}
 
 	private void DFS_Reaction(Reaction r, ArrayList<Compound> compounds, ArrayList<Reaction> reactions, int depth)
@@ -126,46 +177,37 @@ class Plan
 		}
 	}
 
-	public void deleteCompound(Compound c)
+	public boolean deleteCompound(Compound c)
 	{
 		for(Compound com : compounds)
 		{
-			if(com.name == c.name)
+			if(com.name.equals(c.name) && c.chosen)
 			{
-				compounds.remove(com);
-				com.makeable = false;
-				break;
+				com.chosen = false;
+				if (!isViable()) {
+					com.chosen = true;
+				}
+				System.out.println("Attempted to remove compound " + c);
+				return !com.chosen;
 			}
 		}
-		for(Reaction r : c.madeTo)
-		{
-			r.viable = false;
-		}
-		for(Reaction r : c.madeFrom)
-		{
-			deleteReaction(r);
-		}
+		return false;
 	}
 	
-	public void deleteReaction(Reaction r)
+	public boolean deleteReaction(Reaction r)
 	{
 		for(Reaction rea : reactions)
 		{
-			if(rea.name == r.name)
+			if(rea.name.equals(r.name) && r.viable)
 			{
-				reactions.remove(rea);
 				rea.viable = false;
-				break;
+				if (!isViable()) {
+					rea.viable = true;
+				}
+				return !rea.viable;
 			}
 		}
-		for(Compound c : r.madeTo)
-		{
-			c.makeable = false;
-		}
-		for(Compound c : r.madeFrom)
-		{
-			deleteCompound(c);
-		}
+		return false;
 	}
 
 	public String toString()
@@ -173,12 +215,16 @@ class Plan
 		String ans = "This plan used following compounds:\n";
 		for(Compound c : compounds)
 		{
-			ans = ans + c.name + " ";
+			if (c.chosen) {
+				ans = ans + c.name + " ";
+			}
 		}
 		ans = ans + "\n" + "And following reactions:\n";
 		for(Reaction r : reactions)
 		{
-			ans = ans + r.name + " ";
+			if (r.chosen) {
+				ans = ans + r.name + " ";
+			}
 		}
 		return ans;
 	}
