@@ -14,6 +14,7 @@ class Graph
       reactions = new ArrayList<Reaction>();
       for (int i = 0; i < numCompounds; i++) {
          compounds.add(new Compound(i + ""));
+		 //initialize all compounds
 		 if (rand.nextDouble() < 0.3) {
 			 compounds.get(i).substrate = true;
 			 compounds.get(i).originalSubstrate = true;
@@ -35,6 +36,8 @@ class Graph
          boolean usesReagant = (numInputs == 3);
          int numOutputs = rand.nextInt(maxProducts) + 1;
          Compound reagant = new Compound("");
+		 //initialize reactions. if there are 3 inputs, one is a reagant and is
+		 //unchanged during the reaction
          while (numInputs != 0) {
             Compound input = compounds.get(rand.nextInt(compounds.size()));
             if (!input.madeTo.contains(r)) {
