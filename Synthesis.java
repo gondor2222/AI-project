@@ -4,9 +4,9 @@ class Synthesis
 {
 	public static void main(String[] args) 
 	{
-		int numCompounds = 30;
-      	int numReactions = 90;
-		int seed = 1;
+		int numCompounds;
+      		int numReactions;
+		int seed;
 		ArrayList<Integer> targetIndices = new ArrayList<Integer>();
 		
 		//ensure user input is properly formatted
@@ -33,7 +33,7 @@ class Synthesis
 			"reactions must be at least 20");
 		}
 		
-      		Graph g = new Graph(1, numCompounds, numReactions);
+      		Graph g = new Graph(seed, numCompounds, numReactions);
 		//print initial graph properties, for debug purposes like manually
 		//solving a problem
       		System.out.println(g.toString());
@@ -47,8 +47,8 @@ class Synthesis
 			}
 			targets.add(g.compounds.get(i));
 		}
-		
-		Plan p = new Plan(1, g.compounds, g.reactions, targets);
+		long start = System.nanoTime();
+		Plan p = new Plan(seed, g.compounds, g.reactions, targets);
 		
 		//generate initial full tree to depth depending on number of compounds
 		int depth = (int)(Math.log(g.compounds.size()));
@@ -67,5 +67,6 @@ class Synthesis
 		
 		//print final result
 		System.out.println("Final plan: \n" + p.toString());
+		System.out.println("Running time: " + (System.nanoTime() - start)/1e6 + " ms");
 	}
 }
