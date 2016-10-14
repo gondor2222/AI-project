@@ -33,13 +33,18 @@ class Synthesis
 			"reactions must be at least 20");
 		}
 		
-      	Graph g = new Graph(1, numCompounds, numReactions);
+      		Graph g = new Graph(1, numCompounds, numReactions);
 		//print initial graph properties, for debug purposes like manually
 		//solving a problem
-      	System.out.println(g.toString());
+      		System.out.println(g.toString());
 		ArrayList<Compound> targets = new ArrayList<Compound>();
 		//add all the user requested targets in
 		for (Integer i : targetIndices) {
+			if(g.compounds.get(i).substrate)
+			{
+				System.out.println("Target " + i + " is a substrate. Please chooce another target");
+				return;
+			}
 			targets.add(g.compounds.get(i));
 		}
 		
@@ -56,6 +61,7 @@ class Synthesis
 		while (p.beta() < 1) {
 			//while the temperature permits, anneal
 			p.anneal();
+			
 		}
 		
 		//print final result

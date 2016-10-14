@@ -199,6 +199,7 @@ class Plan
 				removal.add(r);
 			}
 		}		
+		System.out.println(removal.size());
 		//pick a reaction to move and increment move count
 		Reaction r = removal.get(rand.nextInt(removal.size()));
 		numMoves++;
