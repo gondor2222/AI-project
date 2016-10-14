@@ -1,0 +1,24 @@
+DD2380
+AI Project: Simulated Annealing for multitarget synthesis
+14 October 2016
+Code by Zimin Chen, Steven Gerick
+
+###########README###########
+Use of this program requires no special knowledge and requires only a few steps.
+1: Compile all source files with "javac *.java"
+2: Run the main file with "java Synthesis <n> <r> <s> <t1> <t2> <t3> ... <tx>",
+   where n is the desired number of compounds in the graph
+         r is the desired number of reactions in the graph
+         s is the desired seed for the random number generator
+         t1, t2, t3... tx are the indices of the desired target compounds (indexed from 0)
+3: The program outputs first a list of compounds and reactions in the graph with their dependencies
+   The program then outputs the initial generated plan, which is all compounds and reactions within
+      a certain depth of the target compounds depending on the number of total compounds
+   Finally, the program runs the annealing and outputs the final annealed plan, or notifies the user if the initial plan was not viable
+
+Substrates are generated randomly and make up 30% of all compounds in the database. If any of the targets are substrates, the program terminates
+   and asks the user to pick a different compound.
+
+
+Example: $ java Synthesis 10 100 203572 0 3 5
+Note that if r is not much larger than c (at least 5 times larger), the problem is unlikely to be solvable.
