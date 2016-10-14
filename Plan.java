@@ -99,6 +99,12 @@ class Plan
 
 	//initializes targets recursively to create the initial plan
 	public void generateInitialPlan(int depth) {
+		visitedC = new HashMap<Compound, Boolean>();
+		visitedR = new HashMap<Reaction, Boolean>();
+		for(Compound c : targets)
+		{
+			visitedC.put(c, true);
+		}
 		for (Compound c : targets) {
 			generateChosen(c, depth + 1);
 		}
@@ -109,7 +115,11 @@ class Plan
 	public void generateChosen(Compound c, int depth) {
 		c.chosen = true;
 		for (Reaction r : c.madeFrom) {
-			generateChosen(r, depth-1);
+			if(!visitedR.containsKey(r))
+			{
+				visitedR.put(r, true);
+				generateChosen(r, depth-1);
+			}
 		}
 	}
 	
@@ -120,7 +130,11 @@ class Plan
 		}
 		r.chosen = true;
 		for (Compound c : r.madeFrom) {
-			generateChosen(c, depth);
+			if(!visitedC.containsKey(c))
+			{
+				visitedC.put(c, true);
+				generateChosen(c, depth);
+			}
 		}
 	}
 	
@@ -198,11 +212,11 @@ class Plan
 			if (r.viable || r.chosen) {
 				removal.add(r);
 			}
-		}		
-		System.out.println(removal.size());
+		}
 		//pick a reaction to move and increment move count
 		Reaction r = removal.get(rand.nextInt(removal.size()));
 		numMoves++;
+		//System.out.println(numMoves);
 		if (r.chosen) {
 			deleteReaction(r);
 		}
@@ -246,9 +260,6 @@ class Plan
 				if (!isViable()) {
 					com.substrate = true;
 				}
-				else {
-					//System.out.println("Removed compound " + c.name);
-				}
 				return !com.substrate;
 			}
 		}
@@ -270,9 +281,6 @@ class Plan
 				rea.chosen = false;
 				if (!isViable()) {
 					rea.chosen = true;
-				}
-				else {
-					//System.out.println("Removed reaction " + r.name);
 				}
 				return !rea.chosen;
 			}

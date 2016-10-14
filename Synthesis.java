@@ -51,13 +51,14 @@ class Synthesis
 		Plan p = new Plan(1, g.compounds, g.reactions, targets);
 		
 		//generate initial full tree to depth depending on number of compounds
-		p.generateInitialPlan((int)(Math.log(g.compounds.size())));
-		System.out.println(p.toString());
+		int depth = (int)(Math.log(g.compounds.size()));
+		p.generateInitialPlan(depth);
 		if (!p.isViable()) {
 			//if not viable to begin with, notify the user and quit
 			System.out.println("Could not locate viable plan from initial graph");
 			return;
 		}
+		System.out.println("Initial plan: \n" + p.toString());
 		while (p.beta() < 1) {
 			//while the temperature permits, anneal
 			p.anneal();
@@ -65,6 +66,6 @@ class Synthesis
 		}
 		
 		//print final result
-		System.out.println(p.toString());
+		System.out.println("Final plan: \n" + p.toString());
 	}
 }
